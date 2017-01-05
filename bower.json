@@ -1,0 +1,30 @@
+{
+  "name": "alt-passaporte-oidc",
+  "main": "dist/alt-passaporte-oidc.min.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/dsn-nimbus/alt-passaporte-oidc.git",
+  "authors": ["dsn-nimbus <ericdantas0@gmail.com>"],
+  "description": "desc",
+  "keywords": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    ".idea",
+    ".gitignore",
+    "node_modules",
+    "tests",
+    "src",
+    "LICENSE",
+    "bower_components",
+    "coverage",
+    "gulpfile.js",
+    "package.json",
+    "*.conf.js"
+  ],
+  "dependencies": {
+    "angular": ">=1.0.8"
+  },
+  "devDependencies": {
+    "angular-mocks": ">=1.0.8"
+  }
+}
