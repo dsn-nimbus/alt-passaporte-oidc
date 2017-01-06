@@ -28,7 +28,7 @@
             var _payload = {};
             var _payloadTemAccessToken = resp && ng.isObject(resp.data) && ng.isDefined(resp.data.access_token);
             var _verboCorreto = resp && ng.isObject(resp.config) && (resp.config.method === "POST");
-            var _endPointCorreto = resp && ng.isObject(resp.config) && (/(\/token)$/.test(resp.config.url);
+            var _endPointCorreto = resp && ng.isObject(resp.config) && /(\/token)$/.test(resp.config.url);
 
             if (_payloadTemAccessToken && _verboCorreto && _endPointCorreto) {
               _payload = JSON.parse($window.localStorage.getItem(ALT_CHAVE_TOKENS));
