@@ -1,23 +1,39 @@
 "use strict";
 
 describe('alt.passaporte.oidc', function() {
-  var _altQueryString, _location, _AltPassaporteBaseUrlServidorAutorizacaoProvider;
+  var _altRetornaQueryString, _location, _altPassaporteBaseUrlServidorAutorizacao,
+      _altPassaporteBaseUrlServidorAutorizacaoProvider, _ALT_CHAVE_TOKENS;
+
   var URL_SERVIDOR_AUTH = 'http://auth.com.br'
 
-  beforeEach(module('alt.passaporte.oidc', function(AltPassaporteBaseUrlServidorAutorizacaoProvider) {
-      _AltPassaporteBaseUrlServidorAutorizacaoProvider = AltPassaporteBaseUrlServidorAutorizacaoProvider;
+  beforeEach(module('alt.passaporte.oidc', function(altPassaporteBaseUrlServidorAutorizacaoProvider) {
+      _altPassaporteBaseUrlServidorAutorizacaoProvider = altPassaporteBaseUrlServidorAutorizacaoProvider;
+      _altPassaporteBaseUrlServidorAutorizacaoProvider.url = URL_SERVIDOR_AUTH;
   }));
 
   beforeEach(inject(function($injector) {
     _location = $injector.get('$location');
-    _altQueryString = $injector.get('altQueryString');
+    _altRetornaQueryString = $injector.get('altRetornaQueryString');
+    _altPassaporteBaseUrlServidorAutorizacao = $injector.get('altPassaporteBaseUrlServidorAutorizacao');
 
-    _AltPassaporteBaseUrlServidorAutorizacaoProvider.url = URL_SERVIDOR_AUTH;
+    _ALT_CHAVE_TOKENS = $injector.get('ALT_CHAVE_TOKENS');
   }));
 
-  describe('altQueryString', function() {
+  describe('ALT_CHAVE_TOKENS', function() {
+    it('deve ter o valor correto para a constante de tokens', function() {
+      expect(_ALT_CHAVE_TOKENS).toEqual('alt.passaporte.tokens')
+    })
+  })
+
+  describe('altPassaporteBaseUrlServidorAutorizacao', function() {
+    it('deve ter o valor correto para a url', function() {
+      expect(_altPassaporteBaseUrlServidorAutorizacao).toEqual(URL_SERVIDOR_AUTH);
+    })
+  })
+
+  describe('altRetornaQueryString', function() {
     it('deve ser uma função', function() {
-      expect(typeof(_altQueryString)).toBe("function");
+      expect(typeof(_altRetornaQueryString)).toBe("function");
     })
 
     it('deve retornar o que vier do location.search', function() {
@@ -25,7 +41,7 @@ describe('alt.passaporte.oidc', function() {
 
       spyOn(_location, 'search').and.returnValue(_retornoQuery);
 
-      expect(_altQueryString()).toEqual(_retornoQuery);
+      expect(_altRetornaQueryString()).toEqual(_retornoQuery);
     })
   })
 });
