@@ -67,7 +67,7 @@ describe('alt.passaporte.oidc', function() {
 
     describe('responseError', function() {
       // verifica status do erro e redireciona usuário para o login (401)
-      // ou busca novo access_token no servidor autenticador (403)
+      // ou busca novo access_token no servidor autenticador (403) 
     })
   })
 
