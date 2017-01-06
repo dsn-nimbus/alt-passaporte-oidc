@@ -15,7 +15,7 @@
       this.cbForbidden = ng.noop;
       this.urlRedirecionamento = '';
 
-      this.$get = ['$window', '$q', 'ALT_CHAVE_TOKENS', function($window, $q, ALT_CHAVE_TOKENS) {
+      this.$get = ['$window', '$http', '$q', 'ALT_CHAVE_TOKENS', 'ALT_BASE_SERVIDOR_AUTENTICACAO', function($window, $http, $q, ALT_CHAVE_TOKENS, ALT_BASE_SERVIDOR_AUTENTICACAO) {
         var self = this;
 
         return {
@@ -47,7 +47,12 @@
             } else {
               if (rej.status === STATUS_FORBIDDEN) {
                 self.cbForbidden();
-                // $http.post...
+
+                /*return $http.post(ALT_BASE_SERVIDOR_AUTENTICACAO)
+                  .catch(function(err) {
+                    return $q.reject(err);
+                  })
+                */
               }
             }
 
