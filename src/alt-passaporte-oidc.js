@@ -15,7 +15,7 @@
       this.cbForbidden = ng.noop;
       this.urlRedirecionamento = '';
 
-      this.$get = ['$window', '$http', '$q', 'ALT_CHAVE_TOKENS', 'ALT_BASE_SERVIDOR_AUTENTICACAO', function($window, $http, $q, ALT_CHAVE_TOKENS, ALT_BASE_SERVIDOR_AUTENTICACAO) {
+      this.$get = ['$window', '$injector', '$q', 'ALT_CHAVE_TOKENS', 'ALT_BASE_SERVIDOR_AUTENTICACAO', function($window, $injector, $q, ALT_CHAVE_TOKENS, ALT_BASE_SERVIDOR_AUTENTICACAO) {
         var self = this;
 
         return {
@@ -40,6 +40,8 @@
             return resp;
           },
           responseError: function(rej) {
+            var $http = $injector.get('$http');
+
             if (rej.status === STATUS_UNAUTHORIZED) {
               self.cbUnauthorized();
               $window.localStorage.removeItem(ALT_CHAVE_TOKENS);
