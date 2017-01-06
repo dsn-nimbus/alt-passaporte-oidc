@@ -40,6 +40,7 @@
             return resp;
           },
           responseError: function(rej) {
+            // previne problemas de dependência circular
             var $http = $injector.get('$http');
 
             if (rej.status === STATUS_UNAUTHORIZED) {
