@@ -20,7 +20,7 @@
 
         return {
           request: function(config) {
-            config.headers['Authorization'] = JSON.parse($window.localStorage.getItem(ALT_CHAVE_TOKENS)).acess_token;
+            config.headers['Authorization'] = 'Bearer ' + JSON.parse($window.localStorage.getItem(ALT_CHAVE_TOKENS)).acess_token;
 
             return config;
           },
