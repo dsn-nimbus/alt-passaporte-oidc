@@ -3,35 +3,60 @@
 
   ng.module('alt.passaporte.oidc', [])
     .constant('ALT_CHAVE_TOKENS', 'alt.passaporte.tokens')
+    .constant('ALT_BASE_SERVIDOR_AUTENTICACAO', altAmbienteUrl.getEndpoint('https://passaporte2__ambiente__.alterdata.com.br'))
     .config(['$httpProvider', function($httpProvider) {
-      $httpProvider.interceptors.push('altAutorizacaoInterceptor');
+      $httpProvider.interceptors.push('altPassaporteAutorizacaoInterceptor');
     }])
-    .provider('altPassaporteBaseUrlServidorAutorizacao', [function() {
-      this.url = '';
+    .provider('altPassaporteAutorizacaoInterceptor', [function() {
+      var STATUS_UNAUTHORIZED = 401;
+      var STATUS_FORBIDDEN = 403;
 
-      this.$get = [function() {
-        return this.url;
-      }];
-    }])
-    .provider('altAutorizacaoInterceptor', [function() {
-      this.status = 401;
-      this.cb = ng.noop;
+      this.cbUnauthorized = ng.noop;
+      this.cbForbidden = ng.noop;
+      this.urlRedirecionamento = '';
 
-      this.$get = ['$q', 'ALT_CHAVE_TOKENS', function($q, ALT_CHAVE_TOKENS) {
+      this.$get = ['$window', '$q', 'ALT_CHAVE_TOKENS', function($window, $q, ALT_CHAVE_TOKENS) {
+        var self = this;
+
         return {
           request: function(config) {
+            config.headers['Authorization'] = JSON.parse($window.localStorage.getItem(ALT_CHAVE_TOKENS)).acess_token;
+
             return config;
           },
           response: function(resp) {
+            var _payload = {};
+            var _payloadTemAccessToken = resp && ng.isObject(resp.data) && ng.isDefined(resp.data.access_token);
+            var _verboCorreto = resp && ng.isObject(resp.config) && (resp.config.method === "POST");
+            var _endPointCorreto = resp && ng.isObject(resp.config) && (/(\/token)$/.test(resp.config.url);
+
+            if (_payloadTemAccessToken && _verboCorreto && _endPointCorreto) {
+              _payload = JSON.parse($window.localStorage.getItem(ALT_CHAVE_TOKENS));
+              _payload.access_token = resp.data.access_token;
+
+              $window.localStorage.setItem(ALT_CHAVE_TOKENS, JSON.stringify(_payload));
+            }
+
             return resp;
           },
           responseError: function(rej) {
+            if (rej.status === STATUS_UNAUTHORIZED) {
+              self.cbUnauthorized();
+              $window.localStorage.removeItem(ALT_CHAVE_TOKENS);
+              $window.location.replace(self.urlRedirecionamento);
+            } else {
+              if (rej.status === STATUS_FORBIDDEN) {
+                self.cbForbidden();
+                // $http.post...
+              }
+            }
+
             return $q.reject(rej);
           }
         }
       }]
     }])
-    .factory('altRetornaQueryString', ['$location', function($location) {
+    .factory('altPassaporteRetornaQueryString', ['$location', function($location) {
         return function() {
           return $location.search();
         }
